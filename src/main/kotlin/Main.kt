@@ -1,54 +1,113 @@
 fun main() {
-    var college = Course ("cs", 1 , mutableListOf("raghad", "rola", "maha"), "Dr.Zamel")
-    var college1 = Professor ("ali", "mohamed" , "9805000000", mutableListOf("cs1", "cs2")
-    var college2 = Student ("khalid", "omar" , mutableListOf("cs1", "cs2"))
+
+
+    val course = Course()
+    course.courseName = "English"
+    course.numberOfLectures = 5
+
+    val course2 = Course()
+    course2.courseName = "Arabic"
+    course2.numberOfLectures = 10
+
+    val courses = ArrayList<Course>()
+    courses.add(course)
+    courses.add(course2)
+    val prof = Professor("ali", "ahmed")
+    val prof2 = Professor("saed", "khaled")
+    prof.courses = courses
+    course.assignProfessor(prof)
+    course2.assignProfessor(prof2)
+
+
+   val stdRaghad =  Student("Raghad","aa",courses)
+    val courseJava = Course()
+    courseJava.courseName = "Java"
+    courseJava.numberOfLectures = 50
+    val courseProgram = ArrayList<Course>()
+    courseProgram.add(courseJava)
+   val stdSami =  Student("Sami","omar",courseProgram)
+    course.enroll(stdRaghad)
+    courseJava.enroll(stdSami)
+   // courseJava.assignProfessor(prof)
+    courseJava.assignProfessor(prof2)
+    println(course.courseInfo())
+    println(courseJava.courseInfo())
+
+
 
 }
 
 
+ class Course() {
+    var courseName = ""
+    var numberOfLectures = 0
+    var students = ArrayList<Student>()
+    var professor: Professor? = null
+    var maxStudent = 20
 
-class Course (var courseName : String , var numberOflectures : Int , var student : List<String> , Professor : String) {
-
-    fun numberOfstudent(): String = "${student.size}"
+    fun numberOfStudents() = students.size
 
 
-    fun assignProfessor() {
-        return assignProfessor()
+    fun assignProfessor(prof: Professor): Boolean {
+        if (professor == null) {
+            professor = prof
+            return true
+        }
+        return false
     }
 
-    fun ProfessorName(): String  {
+    fun professorName(): String? {
+        return professor?.fullName()
+    }
+
+    fun enroll(student: Student): Boolean {
+
+        if (numberOfStudents() < maxStudent) {
+            students.add(student)
+            return true
+        } else {
+            return false
+        }
+
+
 
     }
 
-    fun enroll(student: Boolean) {
-        var s = true
-        if (student == s)
-            println("you can rollin ")
-        return enroll(student)
+     override fun toString(): String {
+         return " courseNam: $courseName, professor: $professor, maxStudent: $maxStudent "
+     }
 
+     fun allStudents():String{
+        var std = ""
+        students.forEach {
+           std+="$it,"
+        }
+        return std
     }
 
+    fun courseInfo(): String = "Course($courseName , $numberOfLectures) , ${allStudents()} ${professor?.fullName()} "
+}
 
-    fun courseInfo(): String = "$courseName , $numberOflectures , $student , ${Professor} "
+
+data class Professor(var firstName: String, var lastName: String) {
+    var courses = ArrayList<Course>()
+    var telephone: String = ""
+
+    fun fullName() = "Professor($firstName $lastName)"
+
+    fun getAllCourses() = courses
 
 }
 
 
+data class Student(var firstName: String, var lastName: String, var course: List<Course>) {
 
 
+    fun fullName() = "$firstName $lastName"
 
-class Professor  (var firstName : String , var lastName : String , numberPhone : String , course:List<String>){
-
-    fun fullName ():String= "$firstName $lastName " }
-
-
-
-
-
-
-class Student  (var firstName : String , var lastName : String , var course:List<String>){
-
-    fun fullName ():String= "$firstName $lastName "
+    override fun toString(): String {
+        return " Student( firstName: $firstName, lastName: $lastName)"
+    }
 
 }
 
